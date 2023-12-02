@@ -8,7 +8,6 @@ public class Day2 {
 
 
     public Day2(List<String> data){
-
         int total = 0;
         for(String line: data){
             HashMap<String, Integer> cubes = new HashMap<>();
@@ -30,7 +29,5 @@ public class Day2 {
             total += Integer.valueOf(cubes.get("red")) * Integer.valueOf(cubes.get("green")) * Integer.valueOf(cubes.get("blue")); 
         }
         System.out.println(total);
-
     }
-    
 }
