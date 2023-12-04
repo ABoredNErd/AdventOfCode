@@ -1,7 +1,9 @@
 package advent.days;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Day3 {
 
@@ -62,8 +64,15 @@ public class Day3 {
         }
     }
 
+    public boolean validate_numb(NumbValue nmb, NumbValue v){
+        return v.finish >= nmb.start && v.finish <= nmb.finish || v.start >= nmb.start && v.start <= nmb.finish || nmb.finish >= v.start && nmb.finish <= v.finish || nmb.start >= v.start && nmb.start <= v.finish;
+    }
+
     public Day3(List<String> data){
         List<NumbValue> numbers = new ArrayList<>();
+        List<NumbValue> gears = new ArrayList<>();
+
+
         NumbValue value = new NumbValue();
         for(int row = 0; row < data.size(); row ++){
             String row_data = data.get(row);
@@ -73,11 +82,19 @@ public class Day3 {
                 if(Character.isDigit(col_data)){
                     value.value += col_data;
                     if(value.start == Integer.MIN_VALUE)
-                        value.start = col - 1;
+                        value.start = col;
                 } else if(value.value != "") {
-                    value.finish = col;
+                    value.finish = col - 1;
                     numbers.add(value);
                     value = new NumbValue();
+                }
+                if(row_data.charAt(col) == '*'){
+                    NumbValue g = new NumbValue();
+                    g.start = col - 1;
+                    g.finish = col + 1;
+                    g.row = row;
+                    g.value = "*";
+                    gears.add(g);
                 }
             }
             if(value.value != ""){
@@ -87,40 +104,53 @@ public class Day3 {
             }
         }
 
-        List<String> engineParts = new ArrayList<>();
-        for(NumbValue v: numbers){
-
-            // System.out.println("Value: " + v.value);
-            // System.out.println("Start: " + v.start);
-            // System.out.println("Finish: " + v.finish);
-            // System.out.println("Row: " + v.row);
-
-            String row_data = data.get(v.row);
-            String row_above_data = null;
-            String row_under_data = null;
-            if(v.row > 0)
-                row_above_data = data.get(v.row - 1);
-            if(v.row < data.size() - 1) {
-                row_under_data = data.get(v.row + 1);
-           //     System.out.println(row_under_data);
-            }
-            boolean valid = false;
-            for(int col = v.start; col <= v.finish; col ++){
-                if(col >= 0 && !valid){
-                    valid = valid || validate_char(row_data.charAt(col));
-                    if(row_above_data != null)
-                        valid = valid || validate_char(row_above_data.charAt(col));
-                    if(row_under_data != null)
-                        valid = valid || validate_char(row_under_data.charAt(col));
-                }
-            }
-            if(valid)
-                engineParts.add(v.value);
-        }
-
+        
+        numbers.stream().filter(nmb -> nmb.value.equals("1")).forEach(v -> {
+            System.out.println("Value: " + v.value);
+            System.out.println("Start: " + v.start);
+            System.out.println("Finish: " + v.finish);
+            System.out.println("Row: " + v.row);
+        });
+        // TODO change this to be hashmap and no filters
         int max = 0;
-        for(String enginePart: engineParts) {
-            max += Integer.valueOf(enginePart);
+        List<String> gearBox = new ArrayList<>();
+        for(NumbValue v: gears){
+
+            System.out.println("Value: " + v.value);
+            System.out.println("Start: " + v.start);
+            System.out.println("Finish: " + v.finish);
+            System.out.println("Row: " + v.row);
+
+            List<NumbValue> row_data = numbers.stream().filter(nmb -> nmb.row == v.row)
+                .filter(nmb -> this.validate_numb(nmb, v)).collect(Collectors.toList());
+            List<NumbValue> row_above_data = null;
+            List<NumbValue> row_under_data = null;
+            if(v.row > 0)
+                row_above_data = numbers.stream().filter(nmb -> nmb.row == v.row - 1)
+                    .filter(nmb -> this.validate_numb(nmb, v)).collect(Collectors.toList());
+            if(v.row <= data.size() - 1) {
+                row_under_data = numbers.stream().filter(nmb -> nmb.row == v.row + 1).filter(nmb -> this.validate_numb(nmb, v)).
+                    collect(Collectors.toList());
+            }
+
+
+            if(row_above_data != null)
+                row_data.addAll(row_above_data);
+            if(row_under_data != null)
+                row_data.addAll(row_under_data);
+
+            System.out.println();
+            System.out.println(row_data.size());
+            row_data.forEach(g -> {
+                System.out.println("Value: " + g.value);
+                System.out.println("Start: " + g.start);
+                System.out.println("Finish: " + g.finish);
+                System.out.println("Row: " + g.row);
+            });
+
+            if(row_data.size() == 2){
+                max += Integer.valueOf(row_data.get(0).value) * Integer.valueOf(row_data.get(1).value);
+            }
         }
         System.out.println("Total: " + max);
     }
