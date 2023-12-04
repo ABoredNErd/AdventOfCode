@@ -1,13 +1,13 @@
 package advent;
 
-import advent.days.Day3;
+import advent.days.Day4;
 import advent.fileReader.FileReader;
 
 public class AdventOfCode {
 
     public static void main(String[] args){
-        FileReader reader = new FileReader("inputFiles/Day3.txt");
+        FileReader reader = new FileReader("inputFiles/Day4.txt");
             
-        new Day3(reader.fileContents());
+        new Day4(reader.fileContents());
     }
 }
