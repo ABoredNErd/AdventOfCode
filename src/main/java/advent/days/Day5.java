@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Day5 {
@@ -24,14 +25,67 @@ public class Day5 {
         public boolean inRange(Long value){
             return value <= higher && value >= lower;
         }
+
+        public boolean inRangeLower(SeedRange range){
+            return range.lower >= this.lower && range.lower <= this.higher;
+        }
+        
+        public boolean inRangeHigher(SeedRange range){
+            return range.higher >= this.lower && range.higher <= this.higher;
+        }
         
         public Long convert(Long value){
             return this.dest + (value - this.lower);
+        }
+
+        public void convert(SeedRange value){
+            value.lower = this.convert(value.lower);
+            value.higher = this.convert(value.higher);
+        }
+    }
+
+    class SeedRange{
+        public Long lower;
+        public Long higher;
+
+        public SeedRange(Long lower, Long higher){
+            this.lower = lower;
+            this.higher = higher;
+        }
+        
+        public Optional<SeedRange> splitRanges(Long split){
+            if(split >= this.higher || split <= this.lower)
+                return Optional.empty();
+            SeedRange newRange = new SeedRange(this.lower, split);
+            this.lower = split + 1;
+            return Optional.of(newRange);
+        }
+
+        public Optional<SeedRange> splitRangesLower(Long split){
+            if(split > this.higher || split < this.lower)
+                return Optional.empty();
+            SeedRange newRange = new SeedRange(this.lower, split - 1);
+            this.lower = split;
+            return Optional.of(newRange);
         }
     }
 
     public Day5(List<String> data){ 
         List<Long> seeds = Arrays.asList(data.get(0).split(":")[1].split(" ")).stream().filter(seed -> seed != "").map(Long::valueOf).collect(Collectors.toList());
+        
+        List<SeedRange> seedRanges = new ArrayList<>();
+
+        // TODO REPLACE WIHT += 2
+        for(int i = 0; i < seeds.size(); i += 2){
+            seedRanges.add(new SeedRange(seeds.get(i), seeds.get(i) + seeds.get(i + 1)));
+            //seedRanges.add(new SeedRange(seeds.get(i), seeds.get(i)));
+        }
+
+        seedRanges.forEach(seed -> {
+            System.out.println("Lower: " + seed.lower);
+            System.out.println("Higher: " + seed.higher);
+        });
+        System.out.println();
 
         List<List<Cat>> cats = new ArrayList<>();
         for(int i = 1; i < data.size(); i++){
@@ -48,17 +102,52 @@ public class Day5 {
 
 
         for(List<Cat> cat_i: cats){
-            for(int i = 0; i < seeds.size(); i ++){
+            for(int i = 0; i < seedRanges.size(); i ++){
                 for(Cat c: cat_i){
-                    if(c.inRange(seeds.get(i))){
-                        seeds.set(i, c.convert(seeds.get(i)));
+                    if(c.inRangeLower(seedRanges.get(i))){
+                        System.out.println("lowerSide");
+                        Optional<SeedRange> split = seedRanges.get(i).splitRanges(c.higher);
+                        if(split.isPresent()){
+                            c.convert(split.get());
+                            seedRanges.add(i, split.get());
+                        } else {
+                            c.convert(seedRanges.get(i));
+                        }
+                        break;
+                    } else if(c.inRangeHigher(seedRanges.get(i))){
+                        System.out.println("higherSide");
+                        Optional<SeedRange> split = seedRanges.get(i).splitRangesLower(c.lower);
+                        if(split.isPresent())
+                            seedRanges.add(split.get());
+                        c.convert(seedRanges.get(i));
                         break;
                     }
                 }
+                System.out.println(i);
             }
+            cat_i.forEach(r -> {
+                System.out.println("Lower: " + r.lower);
+                System.out.println("Higher: " + r.higher);
+                System.out.println();
+            });
+            System.out.println("==========1=============");
+            seedRanges.forEach(r -> {
+                System.out.println("Lower: " + r.lower);
+                System.out.println("Higher: " + r.higher);
+                System.out.println();
+            });
+            System.out.println("Len of ranges: " + seedRanges.size());
+            System.out.println("===============================");
+            System.out.println();
         }
 
-        Collections.sort(seeds);
-        System.out.println("Answer: " + seeds.get(0));
+        seedRanges.sort((rl, rr) -> Long.compare(rl.lower, rr.lower));
+        System.out.println("Answer: " + seedRanges.get(0).lower);
+        
+      //  seedRanges.forEach(r -> {
+      //      System.out.println("Lower: " + r.lower);
+      //      System.out.println("Higher: " + r.higher);
+      //      System.out.println();
+      //  });
     }
 }
