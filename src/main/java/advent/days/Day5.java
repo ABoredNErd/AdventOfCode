@@ -74,18 +74,9 @@ public class Day5 {
         List<Long> seeds = Arrays.asList(data.get(0).split(":")[1].split(" ")).stream().filter(seed -> seed != "").map(Long::valueOf).collect(Collectors.toList());
         
         List<SeedRange> seedRanges = new ArrayList<>();
-
-        // TODO REPLACE WIHT += 2
         for(int i = 0; i < seeds.size(); i += 2){
             seedRanges.add(new SeedRange(seeds.get(i), seeds.get(i) + seeds.get(i + 1)));
-            //seedRanges.add(new SeedRange(seeds.get(i), seeds.get(i)));
         }
-
-        seedRanges.forEach(seed -> {
-            System.out.println("Lower: " + seed.lower);
-            System.out.println("Higher: " + seed.higher);
-        });
-        System.out.println();
 
         List<List<Cat>> cats = new ArrayList<>();
         for(int i = 1; i < data.size(); i++){
@@ -95,8 +86,7 @@ public class Day5 {
                 cats.add(new ArrayList<>());
                 continue;
             }
-            List<Long> numbs = Arrays.asList(data.get(i).split(" ")).stream().map(inpt -> Long.valueOf(inpt)).collect(Collectors.toList());
-
+            List<Long> numbs = Arrays.asList(data.get(i).split(" ")).stream().map(Long::valueOf).collect(Collectors.toList());
             cats.get(cats.size() - 1).add(new Cat(numbs.get(1), numbs.get(1) + (numbs.get(2) - 1), numbs.get(0)));
         }
 
@@ -105,7 +95,6 @@ public class Day5 {
             for(int i = 0; i < seedRanges.size(); i ++){
                 for(Cat c: cat_i){
                     if(c.inRangeLower(seedRanges.get(i))){
-                        System.out.println("lowerSide");
                         Optional<SeedRange> split = seedRanges.get(i).splitRanges(c.higher);
                         if(split.isPresent()){
                             c.convert(split.get());
@@ -115,7 +104,6 @@ public class Day5 {
                         }
                         break;
                     } else if(c.inRangeHigher(seedRanges.get(i))){
-                        System.out.println("higherSide");
                         Optional<SeedRange> split = seedRanges.get(i).splitRangesLower(c.lower);
                         if(split.isPresent())
                             seedRanges.add(split.get());
@@ -123,31 +111,10 @@ public class Day5 {
                         break;
                     }
                 }
-                System.out.println(i);
             }
-            cat_i.forEach(r -> {
-                System.out.println("Lower: " + r.lower);
-                System.out.println("Higher: " + r.higher);
-                System.out.println();
-            });
-            System.out.println("==========1=============");
-            seedRanges.forEach(r -> {
-                System.out.println("Lower: " + r.lower);
-                System.out.println("Higher: " + r.higher);
-                System.out.println();
-            });
-            System.out.println("Len of ranges: " + seedRanges.size());
-            System.out.println("===============================");
-            System.out.println();
         }
 
         seedRanges.sort((rl, rr) -> Long.compare(rl.lower, rr.lower));
         System.out.println("Answer: " + seedRanges.get(0).lower);
-        
-      //  seedRanges.forEach(r -> {
-      //      System.out.println("Lower: " + r.lower);
-      //      System.out.println("Higher: " + r.higher);
-      //      System.out.println();
-      //  });
     }
 }
