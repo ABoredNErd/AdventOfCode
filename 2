@@ -1,0 +1,61 @@
+package advent.days;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Day5 {
+
+    class Range{
+
+        public int lower;
+        public int higher;
+
+        public Range(int lower, int higher){
+            this.lower = lower;
+            this.higher = higher;
+        }
+
+        public boolean inRange(int value){
+            return value <= higher && value >= lower;
+        }
+    }
+
+    class Cat{
+
+        public Range source;
+        public Range dest;
+
+        public Cat(Range source, Range dest){
+            this.source = source;
+            this.dest = dest;
+        }
+    }
+
+    public Day5(List<String> data){ 
+        List<String> seeds = Arrays.asList(data.get(0).split(":")[1].split(" ")).stream().filter(seed -> seed != "").collect(Collectors.toList());
+        
+        List<Cat> cats = new ArrayList<>();
+        for(int i = 1; i < data.size(); i++){
+            if(data.get(i).equals("") || !Character.isDigit(data.get(i).charAt(0)))
+                continue;
+            List<Integer> numbs = Arrays.asList(data.get(i).split(" ")).stream().map(inpt -> Integer.valueOf(inpt)).collect(Collectors.toList());
+
+            Range source = new Range(numbs.get(1), numbs.get(1) + (numbs.get(2) - 1));
+            Range dest = new Range(numbs.get(0), numbs.get(0) + (numbs.get(2) - 1));
+
+            cats.add(new Cat(source, dest));
+        }
+
+        cats.forEach(cat -> {
+            System.out.println("Source:");
+            System.out.println(cat.source.lower);
+            System.out.println(cat.source.lower);
+
+            System.out.println("Dest:");
+            System.out.println(cat.dest.lower);
+            System.out.println(cat.dest.lower);
+        });
+    }
+}

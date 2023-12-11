@@ -13,10 +13,8 @@ public class Day2 {
             cubes.put("red", 0);
             cubes.put("green", 0);
             cubes.put("blue", 0);
-
-            String[] split = line.split(":");
  
-            String[] pieces = split[1].replace(';' , ',').split(",");
+            String[] pieces = line.split(":")[1].replace(';' , ',').split(",");
             for(String cube: pieces){
                 String[] cubeInfo = cube.split(" ");
                 if(cubes.containsKey(cubeInfo[2])){
