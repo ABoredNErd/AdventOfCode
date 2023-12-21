@@ -10,11 +10,11 @@ public class Day6 {
 
     class Race{
 
-        public int time;
+        public long time;
 
-        public int high_score;
+        public long high_score;
         
-        public Race(int time, int high_score){
+        public Race(long time, long high_score){
             this.time = time;
             this.high_score = high_score;
         }
@@ -31,16 +31,21 @@ public class Day6 {
     public Day6(List<String> data){
         List<Race> races = new ArrayList<>(); 
         List<List<String>> result = data.stream().map(row -> Arrays.asList(row.split(":")[1].split(" ")).stream().filter(o_row -> !o_row.equals("")).collect(Collectors.toList())).collect(Collectors.toList());
-        
+       
+        String time = "";
+        String high_score = "";
         for(int i = 0; i < result.get(0).size(); i ++){
-            races.add(new Race(Integer.valueOf(result.get(0).get(i)), Integer.valueOf(result.get(1).get(i))));
+            time += result.get(0).get(i);
+            high_score += result.get(1).get(i);
         }
 
+        races.add(new Race(Long.valueOf(time), Long.valueOf(high_score)));
+
         System.out.println("Races: " + races.size());
-        List<Integer> winning_runs = new ArrayList<>();
+        List<Long> winning_runs = new ArrayList<>();
         
         for(Race race: races) {
-            int winnings = 0;
+            Long winnings = 0l;
             for(int i = 1; i <= race.time; i ++){
                 if(race.high_score < (distance_per_second * i) * (race.time - i))
                     winnings ++;
@@ -49,7 +54,7 @@ public class Day6 {
         }
 
         int r = 1;
-        for(int winning: winning_runs){
+        for(Long winning: winning_runs){
             r *= winning;
         }
         System.out.println(r);
