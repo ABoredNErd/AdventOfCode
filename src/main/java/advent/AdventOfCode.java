@@ -18,6 +18,10 @@ public class AdventOfCode {
     public static void main(String[] args){
         FileReader reader = new FileReader("inputFiles/Day7.txt");
             
+            
+        long startTime = System.currentTimeMillis();
         new Day7(reader.fileContents());
+        long endTime = System.currentTimeMillis();
+        System.out.println("Run time in Millis: " + (endTime - startTime));
     }
 }
