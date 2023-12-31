@@ -1,0 +1,27 @@
+What a planet could be:
+    o x x x o
+    x y y y x
+    x y c y x
+    x y y y x
+    o x x x o
+
+Before a planet has been scanned:
+    ? ? ? ? ?
+    ? ? ? ? ?
+    ? ? ? ? ?
+    ? ? ? ? ?
+    ? ? ? ? ?
+
+Imagine database...
+People can work on there planets... 
+Linked together...
+Planet name system:
+    Start letters are the system
+    Number of planet is how far from the star
+
+What a planet file could look like:
+planetName=CS1
+system=CS
+scale=5x5
+planetData=o xxxoxyyyxxycyxxyyyxoxxxo
+

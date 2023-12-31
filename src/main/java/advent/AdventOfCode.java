@@ -16,8 +16,8 @@ public class AdventOfCode {
     }
 
     public static void main(String[] args){
-        FileReader reader = new FileReader("inputFiles/Day6.txt");
+        FileReader reader = new FileReader("inputFiles/Day7.txt");
             
-        new Day6(reader.fileContents());
+        new Day7(reader.fileContents());
     }
 }
