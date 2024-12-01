@@ -1,0 +1,40 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-----------------------< [0;36madvent.of.code:advent[0;1m >------------------------[m
+[[1;34mINFO[m] [1mBuilding advent 0.1.0[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36madvent[0;1m ---[m
+[[1;33mWARNING[m] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[[1;34mINFO[m] skip non existing resourceDirectory /home/aboredcoder2/development/AdventOfCode/src/main/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.1:compile[m [1m(default-compile)[m @ [36madvent[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36madvent[0;1m ---[m
+[[1;33mWARNING[m] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[[1;34mINFO[m] skip non existing resourceDirectory /home/aboredcoder2/development/AdventOfCode/src/test/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.1:testCompile[m [1m(default-testCompile)[m @ [36madvent[0;1m ---[m
+[[1;34mINFO[m] No sources to compile
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.12.4:test[m [1m(default-test)[m @ [36madvent[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:2.4:jar[m [1m(default-jar)[m @ [36madvent[0;1m ---[m
+[[1;34mINFO[m] Building jar: /home/aboredcoder2/development/AdventOfCode/target/advent-0.1.0.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-shade-plugin:3.2.4:shade[m [1m(default)[m @ [36madvent[0;1m ---[m
+[[1;34mINFO[m] Replacing original artifact with shaded artifact.
+[[1;34mINFO[m] Replacing /home/aboredcoder2/development/AdventOfCode/target/advent-0.1.0.jar with /home/aboredcoder2/development/AdventOfCode/target/advent-0.1.0-shaded.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-install-plugin:2.4:install[m [1m(default-install)[m @ [36madvent[0;1m ---[m
+[[1;34mINFO[m] Installing /home/aboredcoder2/development/AdventOfCode/target/advent-0.1.0.jar to /home/aboredcoder2/.m2/repository/advent/of/code/advent/0.1.0/advent-0.1.0.jar
+[[1;34mINFO[m] Installing /home/aboredcoder2/development/AdventOfCode/pom.xml to /home/aboredcoder2/.m2/repository/advent/of/code/advent/0.1.0/advent-0.1.0.pom
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  0.908 s
+[[1;34mINFO[m] Finished at: 2024-12-01T12:53:12Z
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+25574739
+Run time in Millis: 62
