@@ -2,6 +2,7 @@ package advent.days.year2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -36,11 +37,19 @@ public class Day16 {
         public int x;
         public int y;
 
+        public int move_count = 0;
+
         public double weight = 0;
 
         public boolean is_wall = false;
 
         public boolean visited = false;
+
+        public boolean seen = false;
+
+        public boolean route = false;
+
+        public Score previous = null;
 
         public Score(double f_s, double f_e, int x, int y){
             this.f_s = f_s;
@@ -61,7 +70,7 @@ public class Day16 {
         }
 
         public double get_score(){
-            return this.f_s + this.f_e + this.weight;
+            return this.f_s + this.f_e + this.weight + this.move_count;
         }
     }
 
@@ -99,62 +108,77 @@ public class Day16 {
         }
         
 
-        int x = start.x;
-        int y = start.y;
-        System.out.println(x + " | " + y);
+        Score next = map_scores.get(start.y).get(start.x);
+        next.visited = true;
+        next.move_count = 1;
+
+        System.out.println(next.x + " | " + next.y);
         boolean found = false;
-        Stack<Score> visited = new Stack<>();
-        Stack<Score> bad = new Stack<>();
         while (!found) {
-            Score next = new Score(100, 0, -1, -1);
-            next.set_wall();
-            // find next move
-            if (map_scores.get(y + 1).get(x).get_score() < next.get_score() && !visited.contains(map_scores.get(y + 1).get(x)) && !bad.contains(map_scores.get(y + 1).get(x))) {
-                System.out.println("HERE 1");
-                next = map_scores.get(y + 1).get(x);
-            }
-            if (map_scores.get(y - 1).get(x).get_score() < next.get_score() && !visited.contains(map_scores.get(y - 1).get(x)) && !bad.contains(map_scores.get(y - 1).get(x))) {
-                System.out.println("HERE 2");
-                next = map_scores.get(y - 1).get(x);
-            }
-            if (map_scores.get(y).get(x + 1).get_score() < next.get_score() && !visited.contains(map_scores.get(y).get(x + 1)) && !bad.contains(map_scores.get(y).get(x + 1))) {
-                System.out.println("HERE 3");
-                next = map_scores.get(y).get(x + 1);
-            }
-            if (map_scores.get(y).get(x - 1).get_score() < next.get_score() && !visited.contains(map_scores.get(y).get(x - 1)) && !bad.contains(map_scores.get(y).get(x - 1))) {
-                System.out.println("HERE 4");
-                next = map_scores.get(y).get(x - 1);
+            int y = next.y;
+            int x = next.x;
+            // Create score for surroudning tiles
+            map_scores.get(y + 1).get(x).seen = true;
+            map_scores.get(y + 1).get(x).move_count = next.move_count + 1;
+            if(map_scores.get(y + 1).get(x).previous == null){
+                map_scores.get(y + 1).get(x).previous = next;
             }
 
-            Score visit = map_scores.get(y).get(x); 
-            if(next.is_wall){
-                bad.add(visit);
-                next = visited.pop();
-                next.visited = false;
-            } else {
-                visit.visited = true;
-                visited.add(visit);
+            map_scores.get(y - 1).get(x).seen = true;
+            map_scores.get(y - 1).get(x).move_count = next.move_count + 1;
+            if(map_scores.get(y - 1).get(x).previous == null){
+                map_scores.get(y - 1).get(x).previous = next;
+            }
+            
+            map_scores.get(y).get(x + 1).seen = true;
+            map_scores.get(y).get(x + 1).move_count = next.move_count + 1;
+            if(map_scores.get(y).get(x + 1).previous == null){
+                map_scores.get(y).get(x + 1).previous = next;
             }
 
+            map_scores.get(y).get(x - 1).seen = true;
+            map_scores.get(y).get(x - 1).move_count = next.move_count + 1;
+            if(map_scores.get(y).get(x - 1).previous == null){
+                map_scores.get(y).get(x - 1).previous = next;
+            }
 
-            x = next.x;
-            y = next.y;
-            if (next.f_e == 0) {
-                System.out.println(end);
-                System.out.println(next.f_e);
+            Score best = map_scores.get(0).get(0);
+            for (List<Score> row: map_scores) {
+                Optional<Score> result = row.stream().filter(e1 -> e1.seen).filter(e1 -> !e1.visited).sorted((e1, e2) -> (int)Math.floor(e1.get_score() - e2.get_score())).findFirst();
+                if (result.isPresent()) {
+                    if (result.get().get_score() < best.get_score()) {
+                        best = result.get();
+                    }
+                }
+            }
+            System.out.println("Present");
+            System.out.println(best.x + " | " + best.y);
+            System.out.println(Math.floor( best.get_score() ));
+
+            next = best;
+            next.visited = true;
+
+            if(next.f_e == 0){
                 found = true;
             }
+        }
 
+        next.route = true;
+        found = false;
+        while(!found){
+            next.previous.route = true;
+            next = next.previous;
+            if(next.previous == null){
+                found = true;
+            }
             // debug
             System.out.println(next.ID);
-            System.out.println(next.get_score());
-            System.out.println(next.x + " | " + next.y);
-            // path find
+            // Display map
             for(List<Score> row: map_scores){
                 for(Score col: row){
                     if (col.is_wall) {
                         System.out.print("====");
-                    } else if (col.visited) {
+                    } else if (col.route) {
                         System.out.print("----");
                     } else {
                         System.out.print(Math.floor(col.get_score()));
@@ -166,6 +190,8 @@ public class Day16 {
             }
             debug.nextLine();
         }
+
+
 
     }
 }
