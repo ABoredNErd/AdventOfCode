@@ -28,7 +28,7 @@ public class Day16 {
 
     public class Raindeer{
 
-        public int current_rotation = 0;
+        public int current_rotation = 90;
 
         public int score = 0;
 
@@ -140,11 +140,11 @@ public class Day16 {
         }
         
 
+        map_scores.get(start.y).get(start.x).visited = true;
+        map_scores.get(start.y).get(start.x).move_count = 1;
+        map_scores.get(start.y).get(start.x).previous = map_scores.get(start.y).get(start.x);
         Score next = map_scores.get(start.y).get(start.x);
-        next.visited = true;
-        next.move_count = 1;
 
-        System.out.println(next.x + " | " + next.y);
         boolean found = false;
         while (!found) {
             int y = next.y;
@@ -154,37 +154,37 @@ public class Day16 {
             map_scores.get(y + 1).get(x).move_count = next.move_count + 1;
             if(map_scores.get(y + 1).get(x).previous == null){
                 map_scores.get(y + 1).get(x).previous = next;
+                map_scores.get(y + 1).get(x).raindeer = new Raindeer(next.raindeer);
+                map_scores.get(y + 1).get(x).raindeer.rotate(180);
+                map_scores.get(y + 1).get(x).raindeer.forward();
             }
-            map_scores.get(y + 1).get(x).raindeer = new Raindeer(next.raindeer);
-            map_scores.get(y + 1).get(x).raindeer.rotate(180);
-            map_scores.get(y + 1).get(x).raindeer.forward();
 
             map_scores.get(y - 1).get(x).seen = true;
             map_scores.get(y - 1).get(x).move_count = next.move_count + 1;
             if(map_scores.get(y - 1).get(x).previous == null){
                 map_scores.get(y - 1).get(x).previous = next;
+                map_scores.get(y - 1).get(x).raindeer = new Raindeer(next.raindeer);
+                map_scores.get(y - 1).get(x).raindeer.rotate(0);
+                map_scores.get(y - 1).get(x).raindeer.forward();
             }
-            map_scores.get(y - 1).get(x).raindeer = new Raindeer(next.raindeer);
-            map_scores.get(y - 1).get(x).raindeer.rotate(0);
-            map_scores.get(y - 1).get(x).raindeer.forward();
 
             map_scores.get(y).get(x + 1).seen = true;
             map_scores.get(y).get(x + 1).move_count = next.move_count + 1;
             if(map_scores.get(y).get(x + 1).previous == null){
                 map_scores.get(y).get(x + 1).previous = next;
+                map_scores.get(y).get(x + 1).raindeer = new Raindeer(next.raindeer);
+                map_scores.get(y).get(x + 1).raindeer.rotate(90);
+                map_scores.get(y).get(x + 1).raindeer.forward();
             }
-            map_scores.get(y).get(x + 1).raindeer = new Raindeer(next.raindeer);
-            map_scores.get(y).get(x + 1).raindeer.rotate(90);
-            map_scores.get(y).get(x + 1).raindeer.forward();
 
             map_scores.get(y).get(x - 1).seen = true;
             map_scores.get(y).get(x - 1).move_count = next.move_count + 1;
             if(map_scores.get(y).get(x - 1).previous == null){
                 map_scores.get(y).get(x - 1).previous = next;
+                map_scores.get(y).get(x - 1).raindeer = new Raindeer(next.raindeer);
+                map_scores.get(y).get(x - 1).raindeer.rotate(270);
+                map_scores.get(y).get(x - 1).raindeer.forward();
             }
-            map_scores.get(y).get(x - 1).raindeer = new Raindeer(next.raindeer);
-            map_scores.get(y).get(x - 1).raindeer.rotate(270);
-            map_scores.get(y).get(x - 1).raindeer.rotate(270);
 
             Score best = map_scores.get(0).get(0);
             for (List<Score> row: map_scores) {
@@ -201,6 +201,7 @@ public class Day16 {
             if(next.f_e == 0){
                 found = true;
             }
+
         }
 
         System.out.println(next.raindeer.score);
@@ -213,6 +214,7 @@ public class Day16 {
                 found = true;
             }
         }
+        System.out.println();
 
 
         // debug
