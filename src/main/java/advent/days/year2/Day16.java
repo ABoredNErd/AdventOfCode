@@ -26,10 +26,42 @@ public class Day16 {
         }
     };
 
+    public class Raindeer{
+
+        public int current_rotation = 0;
+
+        public int score = 0;
+
+        public Raindeer(){
+        }
+
+        public Raindeer(Raindeer r){
+            this.score = r.score;
+            this.current_rotation = r.current_rotation;
+        }
+
+        public void rotate(int rotation_goal){
+            if (current_rotation == 0 && rotation_goal == 270) {
+                this.score += 1000;
+            } else if (current_rotation == 270 && rotation_goal == 0) {
+                this.score += 1000;
+            } else {
+                this.score += 1000 * (Math.abs(current_rotation - rotation_goal) / 90);
+            }
+            current_rotation = rotation_goal;
+        }
+        
+        public void forward(){
+            this.score ++;
+        }
+
+    }
+
     public class Score{
         public int ID;
         private static int total = 0;
 
+        public Raindeer raindeer = new Raindeer();
 
         public double f_s;
         public double f_e;
@@ -70,7 +102,7 @@ public class Day16 {
         }
 
         public double get_score(){
-            return this.f_s + this.f_e + this.weight + this.move_count;
+            return this.f_s + this.f_e + this.weight + this.move_count + this.raindeer.score;
         }
     }
 
@@ -123,24 +155,36 @@ public class Day16 {
             if(map_scores.get(y + 1).get(x).previous == null){
                 map_scores.get(y + 1).get(x).previous = next;
             }
+            map_scores.get(y + 1).get(x).raindeer = new Raindeer(next.raindeer);
+            map_scores.get(y + 1).get(x).raindeer.rotate(180);
+            map_scores.get(y + 1).get(x).raindeer.forward();
 
             map_scores.get(y - 1).get(x).seen = true;
             map_scores.get(y - 1).get(x).move_count = next.move_count + 1;
             if(map_scores.get(y - 1).get(x).previous == null){
                 map_scores.get(y - 1).get(x).previous = next;
             }
-            
+            map_scores.get(y - 1).get(x).raindeer = new Raindeer(next.raindeer);
+            map_scores.get(y - 1).get(x).raindeer.rotate(0);
+            map_scores.get(y - 1).get(x).raindeer.forward();
+
             map_scores.get(y).get(x + 1).seen = true;
             map_scores.get(y).get(x + 1).move_count = next.move_count + 1;
             if(map_scores.get(y).get(x + 1).previous == null){
                 map_scores.get(y).get(x + 1).previous = next;
             }
+            map_scores.get(y).get(x + 1).raindeer = new Raindeer(next.raindeer);
+            map_scores.get(y).get(x + 1).raindeer.rotate(90);
+            map_scores.get(y).get(x + 1).raindeer.forward();
 
             map_scores.get(y).get(x - 1).seen = true;
             map_scores.get(y).get(x - 1).move_count = next.move_count + 1;
             if(map_scores.get(y).get(x - 1).previous == null){
                 map_scores.get(y).get(x - 1).previous = next;
             }
+            map_scores.get(y).get(x - 1).raindeer = new Raindeer(next.raindeer);
+            map_scores.get(y).get(x - 1).raindeer.rotate(270);
+            map_scores.get(y).get(x - 1).raindeer.rotate(270);
 
             Score best = map_scores.get(0).get(0);
             for (List<Score> row: map_scores) {
@@ -151,10 +195,6 @@ public class Day16 {
                     }
                 }
             }
-            System.out.println("Present");
-            System.out.println(best.x + " | " + best.y);
-            System.out.println(Math.floor( best.get_score() ));
-
             next = best;
             next.visited = true;
 
@@ -163,35 +203,33 @@ public class Day16 {
             }
         }
 
+        System.out.println(next.raindeer.score);
         next.route = true;
         found = false;
         while(!found){
             next.previous.route = true;
             next = next.previous;
-            if(next.previous == null){
+            if(next.f_s == 0){
                 found = true;
             }
-            // debug
-            System.out.println(next.ID);
-            // Display map
-            for(List<Score> row: map_scores){
-                for(Score col: row){
-                    if (col.is_wall) {
-                        System.out.print("====");
-                    } else if (col.route) {
-                        System.out.print("----");
-                    } else {
-                        System.out.print(Math.floor(col.get_score()));
-                        //System.out.print(col.ID);
-                    }
-                    System.out.print(" | ");
-                }
-                System.out.println();
-            }
-            debug.nextLine();
         }
 
 
-
+        // debug
+        // Display map
+        for(List<Score> row: map_scores){
+            for(Score col: row){
+                if (col.is_wall) {
+                    System.out.print("====");
+                } else if (col.route) {
+                    System.out.print("----");
+                } else {
+                    System.out.print("xxxx");
+                    //System.out.print(col.ID);
+                }
+                System.out.print(" | ");
+            }
+            System.out.println();
+        }
     }
 }
