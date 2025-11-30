@@ -1,15 +1,15 @@
 package advent;
 
 import advent.fileReader.FileReader;
-import advent.year2.*;
+import advent.year3.*;
 
 public class AdventOfCode {
 
     public static void main(String[] args){
-        FileReader reader = new FileReader("inputFiles/year2_day1.txt");
+        FileReader reader = new FileReader("inputFiles/year3/test-day.txt");
             
         long startTime = System.currentTimeMillis();
-        new Day1(reader.fileContents());
+        new DayOne(reader.fileContents());
         long endTime = System.currentTimeMillis();
         System.out.println("Run time in Millis: " + (endTime - startTime));
     }
