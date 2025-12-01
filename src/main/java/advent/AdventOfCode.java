@@ -6,7 +6,7 @@ import advent.year3.*;
 public class AdventOfCode {
 
     public static void main(String[] args){
-        FileReader reader = new FileReader("inputFiles/year3/test-day.txt");
+        FileReader reader = new FileReader("inputFiles/year3/day-one-example.txt");
             
         long startTime = System.currentTimeMillis();
         new DayOne(reader.fileContents());
