@@ -6,10 +6,10 @@ import advent.year3.*;
 public class AdventOfCode {
 
     public static void main(String[] args){
-        FileReader reader = new FileReader("inputFiles/year3/day-three.txt");
+        FileReader reader = new FileReader("inputFiles/year3/day-four.txt");
             
         long startTime = System.currentTimeMillis();
-        new DayThree(reader.fileContents());
+        new DayFour(reader.fileContents());
         long endTime = System.currentTimeMillis();
         System.out.println("Run time in Millis: " + (endTime - startTime));
     }
