@@ -37,47 +37,38 @@ public class DayFive {
 
         System.out.println(">>>>");
         System.out.println(ranges.size());
-        System.out.println(valid.size());
         System.out.println(">>>>");
 
+        ranges.sort((f, s) -> {
+            Long f_l = f.second - f.first;
+            Long s_l = s.second - s.first;
+            return s_l.compareTo(f_l);
+        });
 
         List<Pair<Long, Long>> sorted_ranges = new ArrayList<>();
 
-        for(Pair<Long, Long> first_range: ranges){
-            List<Pair<Long, Long>> results = new ArrayList<>();
-            Pair<Long, Long> f_range = new Pair<Long,Long>(first_range);
-            results.add(f_range);
-            for(Pair<Long, Long> s_range: sorted_ranges){
-                
-                for(Pair<Long, Long> range: results){
-                    System.out.println("Here");
-                    if((s_range.first <= range.second && s_range.first >= range.first) && (s_range.second <= range.second && s_range.second >= range.first)){
-                        Pair<Long, Long> result_left = new Pair<Long,Long>(range.first, s_range.first - 1);
-                        Pair<Long, Long> result_right = new Pair<Long,Long>(s_range.second + 1, range.second);
-                        results.add(result_left);
-                        results.add(result_right);
-                    }
-
-                    if((s_range.first <= range.second && s_range.first >= range.first) && !(s_range.second <= range.second && s_range.second >= range.first)){
-                        Pair<Long, Long> result = new Pair<Long,Long>(range.first, s_range.first - 1);
-                        results.add(result);
-                    }
-                    if(!(s_range.first <= range.second && s_range.first >= range.first) && (s_range.second <= range.second && s_range.second >= range.first)){
-                        Pair<Long, Long> result = new Pair<Long,Long>(s_range.second + 1, range.second);
-                        results.add(result);
-                    }
+        long total = 0;
+        for(Pair<Long, Long> range: ranges){
+            Pair<Long, Long> adding_range = new Pair<>(range);
+            for(Pair<Long, Long> s_r: sorted_ranges){
+                if((range.first <= s_r.second && range.first >= s_r.first) && !(range.second <= s_r.second && range.second >= s_r.first)){
+                    adding_range.first = s_r.second + 1;
+                }
+                if(!(range.first <= s_r.second && range.first >= s_r.first) && (range.second <= s_r.second && range.second >= s_r.first)){
+                    adding_range.second = s_r.first - 1;
+                }
+                if((range.first <= s_r.second && range.first >= s_r.first) && (range.second <= s_r.second && range.second >= s_r.first)){
+                    adding_range.second = 0l;
+                    adding_range.first = 0l;
                 }
             }
-            if(results.size() > 1){
-                results.remove(f_range);
+            System.out.println();
+            System.out.println(adding_range.first + " / " + adding_range.second);
+            System.out.println(range.first + " / " + range.second);
+            if(adding_range.first != 0 && adding_range.second != 0){
+                total += adding_range.second - adding_range.first + 1;
+                sorted_ranges.add(adding_range);
             }
-            sorted_ranges.addAll(results);
-        }
-
-
-        long total = 0;
-        for (Pair<Long,Long> s_range : sorted_ranges) {
-            total += s_range.second - s_range.first;
         }
 
         System.out.println(total);
